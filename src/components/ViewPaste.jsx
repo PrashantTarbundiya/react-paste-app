@@ -16,7 +16,7 @@ const ViewPaste = () => {
     <div className="p-4">
       <div className="flex gap-4 ">
         <input
-          className="p-2 rounded-lg border min-w-[70%]"
+          className="p-2 rounded-lg border min-w-[84%]"
           type="text"
           placeholder="Enter title"
           value={paste.title}
