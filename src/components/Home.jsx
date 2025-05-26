@@ -44,7 +44,7 @@ const Home = () => {
     <div className="p-4">
       <div className="flex gap-4">
         <input
-          className="p-2 rounded-lg border w-2/3"
+          className="p-2 rounded-lg border min-w-[78%]"
           type="text"
           placeholder="Enter title"
           value={title}
@@ -59,7 +59,7 @@ const Home = () => {
       </div>
       <textarea
         className="mt-4 w-full p-2 border rounded-lg"
-        rows={10}
+        rows={15}
         placeholder="Enter content"
         value={value}
         onChange={(e) => setValue(e.target.value)}
