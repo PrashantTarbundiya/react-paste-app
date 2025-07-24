@@ -51,6 +51,8 @@ const Home = () => {
   };
 
   const createPaste = async () => {
+    toast.remove(); // Remove any existing toasts
+    
     if (!validateForm()) {
       toast.error("Please fix the errors before submitting");
       return;
@@ -69,10 +71,8 @@ const Home = () => {
 
       if (pasteId) {
         dispatch(updateToPaste(paste));
-        toast.success("Paste updated successfully!");
       } else {
         dispatch(addToPaste(paste));
-        toast.success("Paste created successfully!");
       }
 
       // Clear form and navigate
@@ -115,6 +115,7 @@ const Home = () => {
   };
 
   const clearForm = () => {
+    toast.remove(); // Remove any existing toasts
     setTitle("");
     setContent("");
     setErrors({});
@@ -130,6 +131,7 @@ const Home = () => {
         setContent(paste.content);
         setErrors({});
       } else {
+        toast.remove(); // Remove any existing toasts
         toast.error("Paste not found");
         setSearchParams({});
       }
@@ -137,17 +139,17 @@ const Home = () => {
   }, [pasteId, allPaste, setSearchParams]);
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-xl">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">
+    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-4 sm:p-6 shadow-xl">
+      <div className="mb-4 sm:mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
           {pasteId ? "Edit Paste" : "Create New Paste"}
         </h2>
-        <p className="text-slate-400">
+        <p className="text-slate-400 text-sm sm:text-base">
           {pasteId ? "Make changes to your existing paste" : "Share your code, text, or notes"}
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 sm:space-y-5">
         {/* Title Input */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-slate-300 mb-2">
@@ -157,7 +159,7 @@ const Home = () => {
             <input
               id="title"
               type="text"
-              className={`w-full px-4 py-3 bg-slate-900/50 border rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-900/50 border rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
                 errors.title ? 'border-red-500' : 'border-slate-600'
               }`}
               placeholder="Enter a descriptive title..."
@@ -166,12 +168,12 @@ const Home = () => {
               maxLength={100}
               disabled={isLoading}
             />
-            <div className="absolute right-3 top-3 text-xs text-slate-500">
+            <div className="absolute right-3 top-2.5 sm:top-3.5 text-xs text-slate-500">
               {title.length}/100
             </div>
           </div>
           {errors.title && (
-            <p className="mt-1 text-sm text-red-400 flex items-center">
+            <p className="mt-1 text-xs sm:text-sm text-red-400 flex items-center">
               <span className="mr-1">⚠</span>
               {errors.title}
             </p>
@@ -186,7 +188,7 @@ const Home = () => {
           <div className="relative">
             <textarea
               id="content"
-              className={`w-full px-4 py-3 bg-slate-900/50 border rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-y min-h-[300px] ${
+              className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 bg-slate-900/50 border rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-y min-h-[250px] sm:min-h-[300px] text-sm sm:text-base ${
                 errors.content ? 'border-red-500' : 'border-slate-600'
               }`}
               placeholder="Paste your content here..."
@@ -201,7 +203,7 @@ const Home = () => {
             </div>
           </div>
           {errors.content && (
-            <p className="mt-1 text-sm text-red-400 flex items-center">
+            <p className="mt-1 text-xs sm:text-sm text-red-400 flex items-center">
               <span className="mr-1">⚠</span>
               {errors.content}
             </p>
@@ -209,11 +211,11 @@ const Home = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2 sm:pt-4">
           <button
             onClick={createPaste}
             disabled={isLoading || (!title.trim() && !content.trim())}
-            className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
+            className={`flex-1 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base ${
               isLoading || (!title.trim() && !content.trim())
                 ? 'bg-slate-600 cursor-not-allowed text-slate-400'
                 : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
@@ -222,11 +224,14 @@ const Home = () => {
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                {pasteId ? "Updating..." : "Creating..."}
+                <span className="hidden sm:inline">{pasteId ? "Updating..." : "Creating..."}</span>
+                <span className="sm:hidden">{pasteId ? "Updating" : "Creating"}</span>
               </>
             ) : (
               <>
-                <span>{pasteId ? "📝 Update Paste" : "✨ Create Paste"}</span>
+                <span className="text-sm sm:text-base">{pasteId ? "📝" : "✨"}</span>
+                <span className="hidden sm:inline">{pasteId ? "Update Paste" : "Create Paste"}</span>
+                <span className="sm:hidden">{pasteId ? "Update" : "Create"}</span>
               </>
             )}
           </button>
@@ -234,9 +239,11 @@ const Home = () => {
           <button
             onClick={clearForm}
             disabled={isLoading}
-            className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2.5 sm:px-6 sm:py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
           >
-            🗑️ Clear Form
+            <span>🗑️</span>
+            <span className="hidden sm:inline">Clear Form</span>
+            <span className="sm:hidden">Clear</span>
           </button>
         </div>
       </div>
